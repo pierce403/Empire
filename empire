@@ -151,7 +151,7 @@ def start_restful_api(startEmpire=False, suppress=False, username=None, password
     port        -   port to start the API on, defaults to 1337 ;)
     """
 
-    app = Flask(__name__)
+    app = Flask(__name__,static_url_path='/static')
 
     conn = database_connect()
 
@@ -213,12 +213,13 @@ def start_restful_api(startEmpire=False, suppress=False, username=None, password
         """
         Before every request, check if a valid token is passed along with the request.
         """
-        if request.path != '/api/admin/login':
-            token = request.args.get('token')
-            if (not token) or (not tokenAllowed.match(token)):
-                return make_response('', 401)
-            if (token != apiToken) and (token != permanentApiToken):
-                return make_response('', 401)
+        if request.path not in ['/api/admin/login','/']:
+            if not request.path.startswith('/static/'):
+                token = request.args.get('token')
+                if (not token) or (not tokenAllowed.match(token)):
+                    return make_response('', 401)
+                if (token != apiToken) and (token != permanentApiToken):
+                    return make_response('', 401)
 
 
     @app.errorhandler(Exception)
@@ -236,6 +237,12 @@ def start_restful_api(startEmpire=False, suppress=False, username=None, password
         """
         return make_response(jsonify({'error': 'Not found'}), 404)
 
+    @app.route('/', methods=['GET'])
+    def index():
+        """
+        Presents the EmpirePanel web interface.
+        """
+        return open('static/index.html').read()
 
     @app.route('/api/version', methods=['GET'])
     def get_version():
