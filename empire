@@ -150,7 +150,7 @@ def start_restful_api(startEmpire=False, suppress=False, username=None, password
     port        -   port to start the API on, defaults to 1337 ;)
     """
 
-    app = Flask(__name__)
+    app = Flask(__name__,static_url_path='/static')
 
     conn = database_connect()
 
@@ -206,7 +206,8 @@ def start_restful_api(startEmpire=False, suppress=False, username=None, password
     # validate API token before every request except for the login URI
     @app.before_request
     def check_token():
-        if request.path != '/api/admin/login':
+        if request.path not in ['/api/admin/login','/']:
+          if not request.path.startswith('/static/'):
             token = request.args.get('token')
             if (not token) or (not tokenAllowed.match(token)):
                 return make_response('', 401)
@@ -223,6 +224,12 @@ def start_restful_api(startEmpire=False, suppress=False, username=None, password
     def not_found(error):
         return make_response(jsonify( { 'error': 'Not found' } ), 404)
 
+    @app.route('/', methods=['GET'])
+    def index():
+        """
+        Presents the EmpirePanel web interface.
+        """
+        return open('static/index.html').read()
 
     @app.route('/api/version', methods=['GET'])
     def get_version():
