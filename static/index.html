@@ -13,9 +13,9 @@ EmpirePanel is a tweaked AdminLTE theme decorated with AngularJS.
   <!-- Bootstrap 3.3.6 -->
   <link rel="stylesheet" href="static/bootstrap/css/bootstrap.min.css">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="font-awesome.min.css">
   <!-- Ionicons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="static/css/AdminLTE.min.css">
   <!-- AdminLTE Skins. We have chosen the skin-blue for this starter
@@ -317,7 +317,10 @@ desired effect
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
+
     <section class="content-header">
+    
+    <!--
       <h1>
         Page Header
         <small>Optional description</small>
@@ -327,6 +330,7 @@ desired effect
         <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
         <li class="active">Here</li>
       </ol>
+      -->
 
 <!-- launcher Modal -->
 <div class="modal fade" id="launcherModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -396,11 +400,11 @@ desired effect
 
         <div ng-if="currentAgent!=''">
 
-          <big>{{currentAgent.name}}</big><br>
-          {{currentAgent.username}} <b>@</b> {{currentAgent.hostname}} <b>$</b> {{currentCommand}}
+          <big>Interacting with {{currentAgent.name}}</big><br>
           <form ng-submit="executeCommand(currentCommand)">
-            <input type="text" ng-model="currentCommand">{{currentCommand}}
-            <button type="submit">go</button>
+          {{currentAgent.username}} <b>@</b> {{currentAgent.hostname}} <b>$</b>
+            <input type="text" ng-model="currentCommand"> spinner?
+            <!-- <button type="submit">go</button> -->
           </form>
 
           <table class="table table-bordered table-hover">

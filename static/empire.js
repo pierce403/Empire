@@ -194,7 +194,7 @@ app.controller('main', ['$scope', function ($scope,$http)
         {
           console.log("exec success");
           $scope.currentCommand="";
-          //$scope.$apply();
+          $scope.$apply();
         }});
     };
 
