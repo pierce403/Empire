@@ -75,6 +75,10 @@ app.controller('main', ['$scope', function ($scope,$http)
           console.log("new reporting data");
           $scope.reporting=data.reporting;
 
+          $scope.$apply();
+        }
+      })
+
           // this is a good place to refresh agent results
           if($scope.currentAgent != "")
           {
@@ -82,11 +86,8 @@ app.controller('main', ['$scope', function ($scope,$http)
             console.log("length "+$scope.currentAgent.results.length);
             console.log("length "+$scope.agents[$scope.currentAgentNumber].results.length);
             $scope.currentResults=JSON.parse($scope.agents[$scope.currentAgentNumber].results).reverse();
+            $scope.$apply();
           }
-
-          $scope.$apply();
-        }
-      })
     
     },1000);    
 
@@ -180,6 +181,7 @@ app.controller('main', ['$scope', function ($scope,$http)
 
     $scope.executeCommand = function(command)
     {
+      $scope.execSpinner="*executing*";
       console.log("executing "+$scope.currentCommand);
       console.log("executing "+command);
       console.log("what "+$scope.currentAgent.name);
@@ -192,6 +194,7 @@ app.controller('main', ['$scope', function ($scope,$http)
         dataType:"json",
         success:function(data)
         {
+          $scope.execSpinner="";
           console.log("exec success");
           $scope.currentCommand="";
           $scope.$apply();
