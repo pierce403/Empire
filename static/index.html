@@ -256,7 +256,7 @@ desired effect
           </form>
 
           <table class="table table-bordered table-hover">
-            <tr ng-repeat="result in currentResults track by $index">
+            <tr ng-repeat="result in currentResults|filter:name track by $index">
               <td> <pre style="white-space: pre-wrap;">{{result}}</pre></td>
             </tr>
           </table>
