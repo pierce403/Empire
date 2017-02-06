@@ -47,6 +47,7 @@ app.controller('main', ['$scope', function ($scope,$http)
       if($scope.token=="")
       {
         console.log("token is '"+$scope.token+"'");
+        //$scope.loginStatus="please authenticate";
         $('#loginModal').modal('show');
         return;
       }
@@ -141,6 +142,8 @@ app.controller('main', ['$scope', function ($scope,$http)
 
     $scope.empireLogin = function()
     {
+      $scope.loginStatus="AUTHENTICATING..";
+      //$scope.$apply();
       var loginString='{"username":["'+$scope.username+'"],"password":["'+$scope.password+'"]}'
       console.log("WOOOOO! "+loginString);
       $.ajax({
@@ -151,10 +154,17 @@ app.controller('main', ['$scope', function ($scope,$http)
         dataType:"json",
         success:function(data)
         {
+          $scope.loginStatus="authenticated!";
           console.log(JSON.stringify(data));
           $scope.token="?token="+data.token;
           window.location=window.location+$scope.token;
           $('#loginModal').modal('hide');
+        },
+        error:function(XMLHttpRequest, textStatus, errorThrown)
+        { 
+          $scope.loginStatus=errorThrown;
+          $scope.$apply();
+          console.log(errorThrown);
         }});
     }
 
@@ -175,6 +185,11 @@ app.controller('main', ['$scope', function ($scope,$http)
           //$scope.$apply();  
         }
       } 
+    };
+    $scope.logData = function()
+    {
+      // when agent is "", log data is displayed
+      $scope.currentAgent="";
     };
 
     $scope.currentCommand="";
