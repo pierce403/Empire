@@ -111,7 +111,20 @@ desired effect
         <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
         <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
         -->
+        <li class="treeview">
+          <a href="#"><i class="fa fa-user-secret"></i> <span>CREDS <small class="lable bg-red">{{creds.length}}</small></span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="#" ng-click="addCreds()"><i class="fa fa-plus"></i>add creds</a>
+              <a href="#" ng-click="getCreds()"><i class="fa fa-plus"></i>get creds</a>
+            </li>
+          </ul>
 
+        </li>
         <li class="treeview">
           <a href="#"><i class="fa fa-bomb"></i> <span>LISTENERS <small class="label bg-red">{{listeners.length}}</small></span>
 
@@ -153,8 +166,17 @@ desired effect
 
             <li ng-repeat="agent in agents">
               <a href="#" ng-click="switchAgent(agent.name)"><i class="fa fa-windows"></i>{{agent.name}}</a>
+              <ul class="treeview-menu">
+                <li>
+                  <a href="#" ng-click="killAgent(agent.name)">
+                    <i class="fa fa-stop-circle"></i>kill agent
+                  </a>
+                </li>
+              </ul>
             </li>
-
+            <!--<li>
+              <a href="#" ng-click="newAgent()"><i class="fa fa-plus"></i>add agent</a>
+            </li>-->
           </ul>
         </li>
 
@@ -170,7 +192,7 @@ desired effect
     <!-- Content Header (Page header) -->
 
     <section class="content-header">
-    
+
     <!--
       <h1>
         Page Header
@@ -215,9 +237,9 @@ desired effect
           name <input type="text" ng-model="listenerOptions.Name.Value"><br>
           host <input type="text" ng-model="listenerOptions.Host.Value"><br>
           port <input type="text" ng-model="listenerOptions.Port.Value">
-          
+
         </form>
-  
+
 
       </div>
       <div class="modal-footer">
@@ -245,7 +267,27 @@ desired effect
   </div>
 </div>
 
-
+<!-- new Credentials Modal -->
+<div class="modal fade" id="newCredsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">ADD CREDENTIAL</h4>
+      </div>
+      <div class="modal-body">
+        <form name="myForm" ng-submit="createCreds()">
+          domain <input type="text" ng-model="credentialsOptions.domain.Value"><br>
+          username <input type="text" ng-model="credentialsOptions.username.Value"><br>
+          password <input type="text" ng-model="credentialsOptions.password.Value">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="createCreds()">ADD CREDENTIAL</button>
+      </div>
+    </div>
+  </div>
+</div>
         <div ng-if="currentAgent!=''">
 
           <big>Interacting with {{currentAgent.name}}</big><br>

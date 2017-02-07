@@ -15,7 +15,7 @@ function psEncode(text)
 
   binary = ''; // convert to binary
   for (var i = 0; i < byteArray.length; i++)
-  {  
+  {
     binary += String.fromCharCode( byteArray[ i ] );
   }
 
@@ -32,7 +32,7 @@ app.controller('main', ['$scope', function ($scope,$http)
   if(window.location.href.split('?').length==2)
   {
     $scope.token="?"+window.location.href.split('?')[1];
-    console.log("got token: "+$scope.token);  
+    console.log("got token: "+$scope.token);
   }
   else
   {
@@ -63,6 +63,16 @@ app.controller('main', ['$scope', function ($scope,$http)
         }
       })
 
+      $.get('api/creds'+$scope.token,function(data) {
+
+        if(String($scope.creds).lendth != String(data.creds).length)
+        {
+          console.log("current creds data");
+          $scope.creds=data.creds;
+          $scope.$apply();
+        }
+      })
+
       $.get('api/agents'+$scope.token,function(data) {
         //console.log('getting agents');
         $scope.agents = data.agents;
@@ -89,8 +99,8 @@ app.controller('main', ['$scope', function ($scope,$http)
             $scope.currentResults=JSON.parse($scope.agents[$scope.currentAgentNumber].results).reverse();
             $scope.$apply();
           }
-    
-    },1000);    
+
+    },1000);
 
     // some functions
     $scope.getLauncherPayload = function(listener,host,staging_key)
@@ -110,10 +120,15 @@ app.controller('main', ['$scope', function ($scope,$http)
       $.ajax({url: 'api/listeners/'+listener+$scope.token, type: 'DELETE'});
     }
 
+    $scope.killAgent = function(agent)
+    {
+      $.ajax({url: 'api/agents/'+agent+'/kill'+$scope.token, type: 'POST'});
+    }
+
     $scope.newListener = function()
     {
       console.log("getting listener options");
-      
+
       $.get('api/listeners/options'+$scope.token,function(data) {
           $scope.listenerOptions=data.listeneroptions[0];
           $scope.$apply();
@@ -161,7 +176,7 @@ app.controller('main', ['$scope', function ($scope,$http)
           $('#loginModal').modal('hide');
         },
         error:function(XMLHttpRequest, textStatus, errorThrown)
-        { 
+        {
           $scope.loginStatus=errorThrown;
           $scope.$apply();
           console.log(errorThrown);
@@ -182,9 +197,9 @@ app.controller('main', ['$scope', function ($scope,$http)
           $scope.currentAgentNumber=x;
           $scope.currentAgent=$scope.agents[x];
           $scope.currentResults=JSON.parse($scope.agents[x].results).reverse();
-          //$scope.$apply();  
+          //$scope.$apply();
         }
-      } 
+      }
     };
     $scope.logData = function()
     {
@@ -215,6 +230,32 @@ app.controller('main', ['$scope', function ($scope,$http)
           $scope.$apply();
         }});
     };
+
+    $scope.getCreds = function()
+    {
+      console.log("getting current creds");
+      $.get('api/creds'+$scope.token,function(data) {
+        $('#newCredsModal').modal('show');
+      });
+    };
+
+    $scope.createCreds = function()
+    {
+      var credentialsString='{"Domain":"'+$scope.credentialsOptions.domain.Value+'","Username":"'+$scope.credentialsOptions.username.Value+'","Password":'+$scope.credentialsOptions.password.Value+'}'
+      console.log("Eek! "+credentialsString);
+      $.ajax({
+        type:'POST',
+        url:'api/creds'+$scope.token,
+        data:credentialsString,
+        contentType:"application/json; charset=utf-8",
+        dataType:"json",
+        success:function(data)
+        {
+          console.log(String(data));
+          $('#newCredsModal').modal('hide');
+        }});
+    }
+
 
 }]);
 
