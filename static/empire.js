@@ -114,7 +114,16 @@ app.controller('main', ['$scope', function ($scope,$http)
 
       $('#launcherModal').modal('show');
     }
+    $scope.getCreds = function(creds)
+    {
+      console.log("getting cred");
 
+      $.get('api/creds'+$scope.token,function(data) {
+        $scope.credentials=data.credentials[0];
+        $scope.apply();
+      $('#credsModal').modal('show');
+    })
+  }
     $scope.killListener = function(listener)
     {
       $.ajax({url: 'api/listeners/'+listener+$scope.token, type: 'DELETE'});
@@ -230,33 +239,6 @@ app.controller('main', ['$scope', function ($scope,$http)
           $scope.$apply();
         }});
     };
-
-    $scope.getCreds = function()
-    {
-      console.log("getting current creds");
-      $.get('api/creds'+$scope.token,function(data) {
-        $('#newCredsModal').modal('show');
-      });
-    };
-
-    $scope.createCreds = function()
-    {
-      var credentialsString='{"Domain":"'+$scope.credentialsOptions.domain.Value+'","Username":"'+$scope.credentialsOptions.username.Value+'","Password":'+$scope.credentialsOptions.password.Value+'}'
-      console.log("Eek! "+credentialsString);
-      $.ajax({
-        type:'POST',
-        url:'api/creds'+$scope.token,
-        data:credentialsString,
-        contentType:"application/json; charset=utf-8",
-        dataType:"json",
-        success:function(data)
-        {
-          console.log(String(data));
-          $('#newCredsModal').modal('hide');
-        }});
-    }
-
-
 }]);
 
 console.log("I'm still here!");
