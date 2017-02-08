@@ -140,9 +140,9 @@ app.controller('main', ['$scope', function ($scope,$http)
         console.log("getting listener options");
 
         $.get('api/listeners/options'+$scope.token,function(data) {
-            $scope.listenerOptions=data.listenerOptions[0];
+            $scope.listenerOptions=data.listeneroptions[0];
             $scope.$apply();
-            console.log("got listener options "+JSON.stringify(data.listenerOptions));
+            console.log("got listener options "+JSON.stringify(data.listeneroptions));
             console.log("name is "+$scope.listenerOptions.Name.Value);
             $('#newListenerModal').modal('show');
         })
