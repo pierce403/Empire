@@ -95,7 +95,7 @@ desired effect
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
           <input type="text" name="q" class="form-control" placeholder="Search..." ng-model="name">
-              <span class="input-group-btn">
+          <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
               </span>
@@ -111,7 +111,31 @@ desired effect
         <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
         <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
         -->
+        <li class="treeview">
+          <a href="#"><i class="fa fa-user-secret"></i> <span>CREDS <small class="label bg-red">{{creds.length}}</small></span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="#" ng-click="getCreds()"><i class="fa fa-plus"></i>get creds</a>
+            </li>
+          </ul>
+        </li>
 
+        <li class="treeview">
+          <a href="#"><i class="fa fa-cogs"></i> <span>MODULES <small class="label bg-red">{{modules.length}}</small></span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a href="#" ng-click="placeholderModules"><i class="fa fa-plus"></i>List Modules</a>
+            </li>
+          </ul>
+        </li>
         <li class="treeview">
           <a href="#"><i class="fa fa-bomb"></i> <span>LISTENERS <small class="label bg-red">{{listeners.length}}</small></span>
 
@@ -123,19 +147,19 @@ desired effect
 
             <li ng-repeat="listener in listeners">
               <a href="#"><i class="fa fa-circle-o"></i> {{listener.name}} {{listener.host}}</a>
-                  <ul class="treeview-menu">
-                    <li>
-                      <a href="#" ng-click="getLauncherPayload(listener.name,listener.host,listener.staging_key)">
-                        <i class="fa fa-play-circle"></i>generate launcher
-                      </a>
-                    </li>
+              <ul class="treeview-menu">
+                <li>
+                  <a href="#" ng-click="getLauncherPayload(listener.name,listener.host,listener.staging_key)">
+                    <i class="fa fa-play-circle"></i>generate launcher
+                  </a>
+                </li>
 
-                    <li>
-                    <a href="#"  ng-click="killListener(listener.name)">
-                      <i class="fa fa-stop-circle"></i>kill listener
-                    </a>
-                    </li>
-                  </ul>
+                <li>
+                  <a href="#"  ng-click="killListener(listener.name)">
+                    <i class="fa fa-stop-circle"></i>kill listener
+                  </a>
+                </li>
+              </ul>
             </li>
             <li>
               <a href="#" ng-click="newListener()"><i class="fa fa-plus"></i>create listener</a>
@@ -153,8 +177,17 @@ desired effect
 
             <li ng-repeat="agent in agents">
               <a href="#" ng-click="switchAgent(agent.name)"><i class="fa fa-windows"></i>{{agent.name}}</a>
+              <ul class="treeview-menu">
+                <li>
+                  <a href="#" ng-click="killAgent(agent.name)">
+                    <i class="fa fa-stop-circle"></i>kill agent
+                  </a>
+                </li>
+              </ul>
             </li>
-
+            <!--<li>
+              <a href="#" ng-click="newAgent()"><i class="fa fa-plus"></i>add agent</a>
+            </li>-->
           </ul>
         </li>
 
@@ -170,122 +203,126 @@ desired effect
     <!-- Content Header (Page header) -->
 
     <section class="content-header">
-    
-    <!--
-      <h1>
-        Page Header
-        <small>Optional description</small>
-      </h1>
-      <p id='config'>[+ FIXME +]</p>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-        <li class="active">Here</li>
-      </ol>
-      -->
 
-<!-- launcher Modal -->
-<div class="modal fade" id="launcherModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Launcher for "{{currentListener}}"</h4>
-      </div>
-      <div class="modal-body">
-        <pre style="white-space: pre-wrap;">{{launcherPayload}}</pre>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
+      <!--
+        <h1>
+          Page Header
+          <small>Optional description</small>
+        </h1>
+        <p id='config'>[+ FIXME +]</p>
+        <ol class="breadcrumb">
+          <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
+          <li class="active">Here</li>
+        </ol>
+        -->
 
-<!-- new Listener Modal -->
-<div class="modal fade" id="newListenerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">NEW LISTENER</h4>
-      </div>
-      <div class="modal-body">
-        <form name="myForm" ng-submit="createListener()">
-          name <input type="text" ng-model="listenerOptions.Name.Value"><br>
-          host <input type="text" ng-model="listenerOptions.Host.Value"><br>
-          port <input type="text" ng-model="listenerOptions.Port.Value">
-          
-        </form>
-  
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" ng-click="createListener()">create listener</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">LOGIN REQUIRED</h4>
-      </div>
-      <div class="modal-body">
-        <form name="myForm" ng-submit="empireLogin()">
-          username <input type="text" ng-model="username"><br>
-          password <input type="password" ng-model="password"><br>
-          <input type="submit" class="btn btn-primary" value="login"> {{loginStatus}}
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-        <div ng-if="currentAgent!=''">
-
-          <big>Interacting with {{currentAgent.name}}</big><br>
-          <form ng-submit="executeCommand(currentCommand)">
-          {{currentAgent.username}} <b>@</b> {{currentAgent.hostname}} <b>$</b>
-            <input type="text" ng-model="currentCommand"> {{execSpinner}}
-            <!-- <button type="submit">go</button> -->
-          </form>
-
-          <table class="table table-bordered table-hover">
-            <tr ng-repeat="result in currentResults|filter:name track by $index">
-              <td> <pre style="white-space: pre-wrap;">{{result}}</pre></td>
-            </tr>
-          </table>
-
+      <!-- launcher Modal -->
+      <div class="modal fade" id="launcherModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="launcherModalLabel">Launcher for "{{currentListener}}"</h4>
+            </div>
+            <div class="modal-body">
+              <pre style="white-space: pre-wrap;">{{launcherPayload}}</pre>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div ng-if="currentAgent==''">
+      <!-- new Listener Modal -->
+      <div class="modal fade" id="newListenerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="listenerModalLabel">NEW LISTENER</h4>
+            </div>
+            <div class="modal-body">
+              <form name="myForm" ng-submit="createListener()">
+                name <input type="text" ng-model="listenerOptions.Name.Value"><br>
+                host <input type="text" ng-model="listenerOptions.Host.Value"><br>
+                port <input type="text" ng-model="listenerOptions.Port.Value">
 
-          <table class="table table-bordered table-hover">
-            <tr>
-              <th>TIME</th>
-              <th>AGENTNAME</th>
-              <th>TYPE</th>
-              <th>MESSAGE</th>
-            </tr>
+              </form>
 
-            <tr ng-repeat="report in reporting|filter:name|orderBy:'-'">
-              <td>{{ report.timestamp }}</td>
-              <td>{{ report.agentname }}</td>
-              <td>{{ report.event_type }}</td>
-              <td>{{ report.message }}</td>
-            </tr>
-          </table>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" ng-click="createListener()">create listener</button>
+            </div>
+          </div>
         </div>
- <!--
-          <li ng-repeat="report in reporting|filter:name">
-            nice {{report.message}}
-          </li>
--->
+      </div>
+
+      <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="loginModalLabel">LOGIN REQUIRED</h4>
+            </div>
+            <div class="modal-body">
+              <form name="myForm" ng-submit="empireLogin()">
+                username <input type="text" ng-model="username"><br>
+                password <input type="password" ng-model="password"><br>
+                <input type="submit" class="btn btn-primary" value="login"> {{loginStatus}}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div ng-if="currentAgent!=''">
+
+        <big>Interacting with {{currentAgent.name}}</big><br>
+        <form ng-submit="executeCommand(currentCommand)">
+          CMD Shell - {{currentAgent.username}} <b>@</b> {{currentAgent.hostname}} <b>$</b>
+          <input type="text" ng-model="currentCommand"> {{execSpinner}}
+          <!-- <button type="submit">go</button> -->
+          <button type="button" class="btn btn-default btn-sm" ng-click="executeCommand(currentCommand)">go</button>
+        </form>
+        <form ng-submit="executeModule(currentModule)">
+          module name (credentials/mimikatz/logonpasswords) <b>$</b>
+          <input type="text" ng-model="currentModule"> {{execSpinner}}
+          <button type="button" class="btn btn-default btn-sm" ng-click="executeModule(currentModule)">pew pew</button>
+        </form>
+        <table class="table table-bordered table-hover">
+          <tr ng-repeat="result in currentResults|filter:name track by $index">
+            <td> <pre style="white-space: pre-wrap;">{{result}}</pre></td>
+          </tr>
+        </table>
+
+      </div>
+
+      <div ng-if="currentAgent==''">
+
+        <table class="table table-bordered table-hover">
+          <tr>
+            <th>TIME</th>
+            <th>AGENTNAME</th>
+            <th>TYPE</th>
+            <th>MESSAGE</th>
+          </tr>
+
+          <tr ng-repeat="report in reporting|filter:name|orderBy:'-'">
+            <td>{{ report.timestamp }}</td>
+            <td>{{ report.agentname }}</td>
+            <td>{{ report.event_type }}</td>
+            <td>{{ report.message }}</td>
+          </tr>
+        </table>
+      </div>
+      <!--
+               <li ng-repeat="report in reporting|filter:name">
+                 nice {{report.message}}
+               </li>
+     -->
     </section>
 
     <!-- Main content -->
@@ -322,7 +359,7 @@ desired effect
         <h3 class="control-sidebar-heading">Recent Activity</h3>
         <ul class="control-sidebar-menu">
           <li>
-            <a href="javascript::;">
+            <a href="javascript:">
               <i class="menu-icon fa fa-birthday-cake bg-red"></i>
 
               <div class="menu-info">
@@ -338,7 +375,7 @@ desired effect
         <h3 class="control-sidebar-heading">Tasks Progress</h3>
         <ul class="control-sidebar-menu">
           <li>
-            <a href="javascript::;">
+            <a href="javascript:">
               <h4 class="control-sidebar-subheading">
                 Custom Template Design
                 <span class="pull-right-container">
@@ -400,16 +437,16 @@ desired effect
 
 <!-- AdminLTE App -->
 <script>
-  var AdminLTEOptions = {
-    //Enable sidebar expand on hover effect for sidebar mini
-    //This option is forced to true if both the fixed layout and sidebar mini
-    //are used together
-    //sidebarExpandOnHover: true,
-    //BoxRefresh Plugin
-    //enableBoxRefresh: true,
-    //Bootstrap.js tooltip
-    //enableBSToppltip: true
-  };
+    var AdminLTEOptions = {
+        //Enable sidebar expand on hover effect for sidebar mini
+        //This option is forced to true if both the fixed layout and sidebar mini
+        //are used together
+        //sidebarExpandOnHover: true,
+        //BoxRefresh Plugin
+        //enableBoxRefresh: true,
+        //Bootstrap.js tooltip
+        //enableBSToppltip: true
+    };
 </script>
 <script src="static/js/app.min.js"></script>
 
