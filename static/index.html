@@ -94,7 +94,7 @@ desired effect
       <!-- search form (Optional) -->
       <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
-          <input type="text" name="q" class="form-control" placeholder="Search..." ng-model="name">
+          <input type="text" name="q" class="form-control" placeholder="search..." ng-model="search">
           <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>
@@ -105,37 +105,6 @@ desired effect
 
       <!-- Sidebar Menu -->
       <ul class="sidebar-menu">
-        <li class="header" ng-click="logData()">LOG DATA</li>
-        <!-- Optionally, you can add icons to the links -->
-        <!--
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-        -->
-        <li class="treeview">
-          <a href="#"><i class="fa fa-user-secret"></i> <span>CREDS <small class="label bg-red">{{creds.length}}</small></span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li>
-              <a href="#" ng-click="getCreds()"><i class="fa fa-plus"></i>get creds</a>
-            </li>
-          </ul>
-        </li>
-
-        <li class="treeview">
-          <a href="#"><i class="fa fa-cogs"></i> <span>MODULES <small class="label bg-red">{{modules.length}}</small></span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-            <li>
-              <a href="#" ng-click="placeholderModules"><i class="fa fa-plus"></i>List Modules</a>
-            </li>
-          </ul>
-        </li>
         <li class="treeview">
           <a href="#"><i class="fa fa-bomb"></i> <span>LISTENERS <small class="label bg-red">{{listeners.length}}</small></span>
 
@@ -167,9 +136,10 @@ desired effect
           </ul>
         </li>
 
-        <li class="treeview">
-          <a href="#"><i class="fa fa-users"></i> <span>AGENTS <small class="label bg-red">{{agents.length}}</small></span>
-            <span class="pull-right-container">
+        <li class="active">
+          <a href="#" ng-click="setPage('agents');switchAgent('')"><i class="fa fa-users"></i>
+          <span>AGENTS <small class="label bg-red">{{agents.length}}</small></span>
+          <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
@@ -191,6 +161,23 @@ desired effect
           </ul>
         </li>
 
+        <li class="active">
+          <a href="#" ng-click="setPage('creds')"><i class="fa fa-user-secret"></i>
+          <span>CREDS <small class="label bg-red">{{creds.length}}</small></span>
+          </a>
+        </li>
+
+        <li class="active">
+          <a href="#" ng-click="setPage('modules')"><i class="fa fa-cogs"></i>
+          <span>MODULES <small class="label bg-red">{{modules.length}}</small></span>
+          </a>
+        </li>
+
+        <li class="active">
+          <a href="#" ng-click="setPage('logs')"><i class="fa fa-pencil-square-o"></i>
+          <span>LOGS <small class="label bg-red">{{reporting.length}}</small></span>
+          </a>
+        </li>
 
       </ul>
       <!-- /.sidebar-menu -->
@@ -204,17 +191,8 @@ desired effect
 
     <section class="content-header">
 
-      <!--
-        <h1>
-          Page Header
-          <small>Optional description</small>
-        </h1>
-        <p id='config'>[+ FIXME +]</p>
-        <ol class="breadcrumb">
-          <li><a href="#"><i class="fa fa-dashboard"></i> Level</a></li>
-          <li class="active">Here</li>
-        </ol>
-        -->
+
+<!-- THIS IS WHERE ALL THE MODALS GO -->
 
       <!-- launcher Modal -->
       <div class="modal fade" id="launcherModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -278,9 +256,13 @@ desired effect
         </div>
       </div>
 
-      <div ng-if="currentAgent!=''">
+<!-- END OF MODALS, START OF TABLE DISPLAYS -->
 
-        <big>Interacting with {{currentAgent.name}}</big><br>
+      <div ng-if="page=='agents'">
+       <!-- DISPLAY ONE PARTICULAR AGENT -->
+       <div ng-if="currentAgent!=''">
+
+        <big>Interacting with {{currentAgent.name}} ({{currentAgent.internal_ip}})</big><br>
         <form ng-submit="executeCommand(currentCommand)">
           CMD Shell - {{currentAgent.username}} <b>@</b> {{currentAgent.hostname}} <b>$</b>
           <input type="text" ng-model="currentCommand"> {{execSpinner}}
@@ -293,15 +275,35 @@ desired effect
           <button type="button" class="btn btn-default btn-sm" ng-click="executeModule(currentModule)">pew pew</button>
         </form>
         <table class="table table-bordered table-hover">
-          <tr ng-repeat="result in currentResults|filter:name track by $index">
+          <tr ng-repeat="result in currentResults|filter:search track by $index">
             <td> <pre style="white-space: pre-wrap;">{{result}}</pre></td>
           </tr>
         </table>
 
       </div>
-
+       <!-- DISPLAY ALL AGENTS -->
       <div ng-if="currentAgent==''">
+        <table class="table table-bordered table-hover">
+          <tr>
+            <th>AGENT</th>
+            <th>IP</th>
+            <th>USER</th>
+            <th>HOSTNAME</th>
+            <th>OS</th>
+          </tr>
 
+          <tr ng-click="switchAgent(agent.name)" ng-repeat="agent in agents|filter:search">
+            <td>{{ agent.name }}</td>
+            <td>{{ agent.internal_ip }}</td>
+            <td>{{ agent.username }}</td>
+            <td>{{ agent.hostname }}</td>
+            <td>{{ agent.os_details }}</td>
+          </tr>
+        </table>
+        </div>
+      </div>
+
+      <div ng-if="page=='logs'">
         <table class="table table-bordered table-hover">
           <tr>
             <th>TIME</th>
@@ -310,19 +312,45 @@ desired effect
             <th>MESSAGE</th>
           </tr>
 
-          <tr ng-repeat="report in reporting|filter:name|orderBy:'-'">
+          <tr ng-repeat="report in reporting|filter:search|orderBy:'-'">
             <td>{{ report.timestamp }}</td>
             <td>{{ report.agentname }}</td>
             <td>{{ report.event_type }}</td>
             <td>{{ report.message }}</td>
           </tr>
         </table>
+        </div>
+
+        <div ng-if="page=='creds'">
+        <table class="table table-bordered table-hover">
+          <tr>
+            <th>DOMAIN</th>
+            <th>USERNAME</th>
+            <th>PASSWORD</th>
+          </tr>
+
+          <tr ng-repeat="cred in creds|filter:search|orderBy:'-'">
+            <td>{{ cred.domain }}</td>
+            <td>{{ cred.username }}</td>
+            <td>{{ cred.password }}</td>
+          </tr>
+        </table>
+        </div>
+      
+      <div ng-if="page=='modules'">
+        <table class="table table-bordered table-hover">
+          <tr>
+            <th>NAME</th>
+            <th>DESCRIPTION</th>
+          </tr>
+
+          <tr ng-repeat="module in modules|filter:search">
+            <td>{{ module.Name }}</td>
+            <td>{{ module.Description }}</td>
+          </tr>
+        </table>
       </div>
-      <!--
-               <li ng-repeat="report in reporting|filter:name">
-                 nice {{report.message}}
-               </li>
-     -->
+
     </section>
 
     <!-- Main content -->

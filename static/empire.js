@@ -196,7 +196,7 @@ app.controller('main', ['$scope', function ($scope,$http)
     $scope.currentAgent='';
     $scope.switchAgent = function(agent)
     {
-        //$scope.currentAgent=agent;
+        $scope.currentAgent='';
         $scope.currentResults=[""];
         for(x=0;x<$scope.agents.length;++x)
         {
@@ -215,6 +215,13 @@ app.controller('main', ['$scope', function ($scope,$http)
     {
         // when agent is "", log data is displayed
         $scope.currentAgent="";
+    };
+
+    $scope.setPage = function(page)
+    {
+      console.log("setting page to "+page);
+        // when agent is "", log data is displayed
+        $scope.page=page;
     };
 
     $scope.currentCommand="";
