@@ -249,10 +249,9 @@ app.controller('main', ['$scope', function ($scope,$http)
     };
 
     $scope.currentModule="";
-
     $scope.executeModule = function(module)
     {
-        $scope.execSpinner="*executing module";
+        $scope.moduleSpinner="*executing module";
         console.log("executing "+$scope.currentModule);
         console.log("executing "+module);
         console.log("what "+$scope.currentAgent.name);
@@ -269,7 +268,7 @@ app.controller('main', ['$scope', function ($scope,$http)
             dataType:"json",
             success:function(data)
             {
-                $scope.execSpinner="";
+                $scope.moduleSpinner="";
                 console.log("module success");
                 $scope.currentModule="";
                 $scope.$apply();

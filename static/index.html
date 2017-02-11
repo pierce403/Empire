@@ -263,17 +263,23 @@ desired effect
        <div ng-if="currentAgent!=''">
 
         <big>Interacting with {{currentAgent.name}} ({{currentAgent.internal_ip}})</big><br>
+        Running as {{currentAgent.username}} <b>@</b> {{currentAgent.hostname}} <br>
         <form ng-submit="executeCommand(currentCommand)">
-          CMD Shell - {{currentAgent.username}} <b>@</b> {{currentAgent.hostname}} <b>$</b>
-          <input type="text" ng-model="currentCommand"> {{execSpinner}}
+          <b>SHELL EXEC :</b>
+          <input type="text" ng-model="currentCommand">
           <!-- <button type="submit">go</button> -->
-          <button type="button" class="btn btn-default btn-sm" ng-click="executeCommand(currentCommand)">go</button>
+          <button type="button" class="btn btn-default btn-sm" ng-click="executeCommand(currentCommand)">go</button> {{execSpinner}}
         </form>
         <form ng-submit="executeModule(currentModule)">
-          module name (credentials/mimikatz/logonpasswords) <b>$</b>
-          <input type="text" ng-model="currentModule"> {{execSpinner}}
-          <button type="button" class="btn btn-default btn-sm" ng-click="executeModule(currentModule)">pew pew</button>
+          <b>MODULE EXEC :</b> 
+          <input ng-model="currentModule" list="moduleList"/>
+            <datalist id="moduleList">
+              <option ng-repeat="module in modules|orderBy:'Name'" value="{{module.Name}}" />
+            </datalist>
+          <button type="button" class="btn btn-default btn-sm" ng-click="executeModule(currentModule)">pew pew</button> {{moduleSpinner}}
+
         </form>
+
         <table class="table table-bordered table-hover">
           <tr ng-repeat="result in currentResults|filter:search track by $index">
             <td> <pre style="white-space: pre-wrap;">{{result}}</pre></td>
@@ -456,6 +462,7 @@ desired effect
 
 <!-- jQuery 2.2.3 -->
 <script src="static/jquery-3.1.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <!-- <script src="static/plugins/jQuery/jquery-2.2.3.min.js"></script> -->
 
 <!-- Bootstrap 3.3.6 -->
@@ -477,7 +484,6 @@ desired effect
     };
 </script>
 <script src="static/js/app.min.js"></script>
-
 <script src="static/angular.min.js"></script>
 <script src="static/empire.js"></script>
 
