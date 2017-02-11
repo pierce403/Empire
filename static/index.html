@@ -344,7 +344,7 @@ desired effect
             <th>DESCRIPTION</th>
           </tr>
 
-          <tr ng-repeat="module in modules|filter:search">
+          <tr ng-repeat="module in modules|orderBy:'Name'|filter:search">
             <td>{{ module.Name }}</td>
             <td>{{ module.Description }}</td>
           </tr>
