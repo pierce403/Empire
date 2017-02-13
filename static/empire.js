@@ -286,6 +286,10 @@ app.controller('main', ['$scope', function ($scope,$http)
         {
           console.log("got key: "+key); // 'Agent' should be first key
           console.log("value is: "+$scope.currentModule.options[key].Value);
+
+          // don't record empty arguments
+          if($scope.currentModule.options[key].Value=='')continue;
+
           moduleString=moduleString+'"'+key+'":"'+$scope.currentModule.options[key].Value+'",';
         }
         moduleString=moduleString.slice(0, -1)+'}'; // replace last comma with closing bracket
