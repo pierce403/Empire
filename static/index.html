@@ -226,9 +226,7 @@ desired effect
                 name <input type="text" ng-model="listenerOptions.Name.Value"><br>
                 host <input type="text" ng-model="listenerOptions.Host.Value"><br>
                 port <input type="text" ng-model="listenerOptions.Port.Value">
-
               </form>
-
 
             </div>
             <div class="modal-footer">
@@ -238,6 +236,7 @@ desired effect
         </div>
       </div>
 
+      <!-- login modal -->
       <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -251,6 +250,34 @@ desired effect
                 password <input type="password" ng-model="password"><br>
                 <input type="submit" class="btn btn-primary" value="login"> {{loginStatus}}
               </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- execute module Modal -->
+      <div class="modal fade" id="execModuleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="listenerModalLabel">Executing <b>{{currentModule.Name}}</b></h4>
+            </div>
+            <div class="modal-body">
+              <form name="myForm" ng-submit="executeModule()">
+              <table class="table table-bordered table-hover">
+              <tr ng-repeat="(key, value) in currentModule.options">
+                <td>{{key}}</td>
+                <td><div ng-if="value.Required==true" title="required option">*</div></td>
+                <td><input type="text" ng-model="value.Value" required={{value.Required}}>
+                <td>{{value.Description}}</td>
+              </tr>
+              </table>
+              </form>
+
+            </div>
+            <div class="modal-footer">{{moduleSpinner}}
+              <button type="button" class="btn btn-primary" ng-click="executeModule()">run module</button>
             </div>
           </div>
         </div>
@@ -276,7 +303,7 @@ desired effect
             <datalist id="moduleList">
               <option ng-repeat="module in modules|orderBy:'Name'" value="{{module.Name}}" />
             </datalist>
-          <button type="button" class="btn btn-default btn-sm" ng-click="executeModule(currentModule)">pew pew</button> {{moduleSpinner}}
+          <button type="button" class="btn btn-default btn-sm" ng-click="setupModule(currentModule)">pew pew</button> {{moduleSpinner}}
 
         </form>
 
@@ -460,9 +487,7 @@ desired effect
 
 <!-- REQUIRED JS SCRIPTS -->
 
-<!-- jQuery 2.2.3 -->
 <script src="static/jquery-3.1.1.min.js"></script>
-<!-- <script src="static/plugins/jQuery/jquery-2.2.3.min.js"></script> -->
 
 <!-- Bootstrap 3.3.6 -->
 <!-- Latest compiled and minified CSS -->

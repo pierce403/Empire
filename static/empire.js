@@ -248,21 +248,53 @@ app.controller('main', ['$scope', function ($scope,$http)
             }});
     };
 
-    $scope.currentModule="";
-    $scope.executeModule = function(module)
+    $scope.setupModule = function(module)
     {
-        $scope.moduleSpinner="*executing module";
+      for(x=0;x<$scope.modules.length;++x)
+      {
+        console.log("MODULE LOOP!! "+$scope.modules[x].Name);
+
+        if($scope.modules[x].Name==module)
+        {
+          console.log("FOUND "+module);
+          $scope.currentModule=$scope.modules[x];
+
+
+          $scope.currentModule.options['Agent'].Value=$scope.currentAgent.name;
+          $('#execModuleModal').modal('show');
+
+          return;
+        }  
+      }
+      $scope.moduleSpinner="module not found";
+      console.log("WHAT??")
+    };
+
+    $scope.executeModule = function()
+    {
+        $scope.moduleSpinner="executing module";
         console.log("executing "+$scope.currentModule);
-        console.log("executing "+module);
+        //console.log("executing "+module);
         console.log("what "+$scope.currentAgent.name);
 
-        var moduleString='{"Agent":"'+$scope.currentAgent.name+'"}'
-        console.log("M000! "+moduleString);
+        console.log("agent is: "+$scope.currentModule.options['Agent'].Value);
+        console.log("keys are: "+Object.keys($scope.currentModule.options));
+
+        var keys = Array.from(Object.keys($scope.currentModule.options));
+        var moduleString='{';
+        for(key in $scope.currentModule.options)
+        {
+          console.log("got key: "+key); // 'Agent' should be first key
+          console.log("value is: "+$scope.currentModule.options[key].Value);
+          moduleString=moduleString+'"'+key+'":"'+$scope.currentModule.options[key].Value+'",';
+        }
+        moduleString=moduleString.slice(0, -1)+'}'; // replace last comma with closing bracket
+
+        console.log("module string: "+moduleString);
 
         $.ajax({
             type:'POST',
-            url:'api/modules/'+module+$scope.token,
-            <!--data:'{"Agent":"'+$scope.currentAgent.name+'"}',-->
+            url:'api/modules/'+$scope.currentModule.Name+$scope.token,
             data:moduleString,
             contentType:"application/json",
             dataType:"json",
@@ -272,6 +304,14 @@ app.controller('main', ['$scope', function ($scope,$http)
                 console.log("module success");
                 $scope.currentModule="";
                 $scope.$apply();
+                $('#execModuleModal').modal('hide');
+            },
+            error:function(XMLHttpRequest, textStatus, errorThrown)
+            {
+                $scope.moduleSpinner=errorThrown;
+                $scope.$apply();
+                console.log(textStatus);
+                console.log(errorThrown);
             }
         });
     };
