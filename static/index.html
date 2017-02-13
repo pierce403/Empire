@@ -297,7 +297,7 @@ desired effect
           <!-- <button type="submit">go</button> -->
           <button type="button" class="btn btn-default btn-sm" ng-click="executeCommand(currentCommand)">go</button> {{execSpinner}}
         </form>
-        <form ng-submit="executeModule(currentModule)">
+        <form ng-submit="setupModule(currentModule)">
           <b>MODULE EXEC :</b> 
           <input ng-model="currentModule" list="moduleList"/>
             <datalist id="moduleList">
@@ -377,7 +377,7 @@ desired effect
             <th>DESCRIPTION</th>
           </tr>
 
-          <tr ng-repeat="module in modules|orderBy:'Name'|filter:search">
+          <tr ng-click="setupModule(module.Name)" ng-repeat="module in modules|orderBy:'Name'|filter:search">
             <td>{{ module.Name }}</td>
             <td>{{ module.Description }}</td>
           </tr>
