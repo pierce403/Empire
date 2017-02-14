@@ -312,10 +312,10 @@ app.controller('main', ['$scope', function ($scope,$http)
             },
             error:function(XMLHttpRequest, textStatus, errorThrown)
             {
-                $scope.moduleSpinner=errorThrown;
+                error = JSON.parse(XMLHttpRequest.responseText)['error'];
+                console.log(error);
+                $scope.moduleSpinner=error;
                 $scope.$apply();
-                console.log(textStatus);
-                console.log(errorThrown);
             }
         });
     };
