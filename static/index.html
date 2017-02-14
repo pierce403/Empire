@@ -146,7 +146,7 @@ desired effect
           <ul class="treeview-menu">
 
             <li ng-repeat="agent in agents">
-              <a href="#" ng-click="switchAgent(agent.name)"><i class="fa fa-windows"></i>{{agent.name}}</a>
+              <a href="#" ng-click="setPage('agents');switchAgent(agent.name)"><i class="fa fa-windows"></i>{{agent.name}}</a>
               <ul class="treeview-menu">
                 <li>
                   <a href="#" ng-click="killAgent(agent.name)">
