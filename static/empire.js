@@ -233,10 +233,12 @@ app.controller('main', ['$scope', function ($scope,$http)
         console.log("executing "+command);
         console.log("what "+$scope.currentAgent.name);
 
+        commandObject={"command":command};
+
         $.ajax({
             type:'POST',
             url:'api/agents/'+$scope.currentAgent.name+'/shell'+$scope.token,
-            data: '{"command":"'+command+'"}',
+            data: JSON.stringify(commandObject),
             contentType:"application/json; charset=utf-8",
             dataType:"json",
             success:function(data)
