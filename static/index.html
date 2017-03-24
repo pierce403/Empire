@@ -323,6 +323,7 @@ desired effect
             <th>USER</th>
             <th>HOSTNAME</th>
             <th>OS</th>
+            <th>LAST SEEN</th>
           </tr>
 
           <tr ng-click="switchAgent(agent.name)" ng-repeat="agent in agents|filter:search">
@@ -331,6 +332,7 @@ desired effect
             <td>{{ agent.username }}</td>
             <td>{{ agent.hostname }}</td>
             <td>{{ agent.os_details }}</td>
+            <td>{{ agent.lastseen_time }}</td>
           </tr>
         </table>
         </div>
